@@ -5,6 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@expo/html-elements':
+    specifier: 0.4.2
+    version: 0.4.2
+  '@gluestack-ui/button':
+    specifier: ^1.0.7
+    version: 1.0.7(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0)
+  '@gluestack-ui/form-control':
+    specifier: ^0.1.18
+    version: 0.1.18(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0)
+  '@gluestack-ui/input':
+    specifier: ^0.1.31
+    version: 0.1.31(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0)
   '@gluestack-ui/nativewind-utils':
     specifier: 1.0.23
     version: 1.0.23(nativewind@4.0.36)(react@18.2.0)(tailwindcss@3.4.14)
@@ -32,6 +44,9 @@ dependencies:
   expo-status-bar:
     specifier: ~1.12.1
     version: 1.12.1
+  lucide-react-native:
+    specifier: ^0.454.0
+    version: 0.454.0(react-native-svg@13.4.0)(react-native@0.74.5)(react@18.2.0)
   nativewind:
     specifier: 4.0.36
     version: 4.0.36(@babel/core@7.20.2)(react-native-reanimated@3.16.1)(react-native-safe-area-context@4.10.5)(react-native-svg@13.4.0)(react-native@0.74.5)(react@18.2.0)(tailwindcss@3.4.14)
@@ -1926,6 +1941,10 @@ packages:
       - supports-color
     dev: false
 
+  /@expo/html-elements@0.4.2:
+    resolution: {integrity: sha512-lNioCgdtOrCMMqzHY+PCTdyuWBTU4yMBlOzPSkS4YFIWt9bq0zexM2ZJkpybTXmowNdE3zHO93xxAmiA2yDi2w==}
+    dev: false
+
   /@expo/image-utils@0.5.1:
     resolution: {integrity: sha512-U/GsFfFox88lXULmFJ9Shfl2aQGcwoKPF7fawSCLixIKtMCpsI+1r0h+5i0nQnmt9tHuzXZDL8+Dg1z6OhkI9A==}
     dependencies:
@@ -2150,6 +2169,35 @@ packages:
       tslib: 2.8.0
     dev: false
 
+  /@gluestack-ui/button@1.0.7(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0):
+    resolution: {integrity: sha512-6hz5BPoB+iHMpDvys6AbIpeRPbnFiqyE3SnnbKPSCj8lgl3Dr9sFln41BvDmqmZ98d0usJluk50rz8pVNRZRgw==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@gluestack-ui/utils': 0.1.13(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0)
+      '@react-native-aria/focus': 0.2.9(react-native@0.74.5)(react@18.2.0)
+      '@react-native-aria/interactions': 0.2.13(react-native@0.74.5)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.3.1(react@18.2.0)
+    transitivePeerDependencies:
+      - react-native
+    dev: false
+
+  /@gluestack-ui/form-control@0.1.18(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0):
+    resolution: {integrity: sha512-sVRdh5qZwZGddMiHTG0IHEEktO6iwgKFSoccjmK7P7U/shWt7xAdt5Hh2Rp7+2C/g02v76uFlycI+GhtbnwLGw==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@gluestack-ui/utils': 0.1.13(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0)
+      '@react-native-aria/focus': 0.2.9(react-native@0.74.5)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.3.1(react@18.2.0)
+    transitivePeerDependencies:
+      - react-native
+    dev: false
+
   /@gluestack-ui/hooks@0.1.11(react-dom@18.3.1)(react@18.2.0):
     resolution: {integrity: sha512-bcBsF7bTo//JD6L9ekJu0rZs83qYD/pE/Uj3ih3OYEtGU0LDoYiGkBMmDRpVMcVv8bE3TCKivnhHaT/heafInA==}
     peerDependencies:
@@ -2158,6 +2206,22 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.3.1(react@18.2.0)
+    dev: false
+
+  /@gluestack-ui/input@0.1.31(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0):
+    resolution: {integrity: sha512-qunHYjHbuzafJhFaUHzDT28pjC7AgTUJ0jH//w53MLXmTCBDh7kEgqLt1Fxfh3/F7AAN2rLquiOOqdX14H6TOQ==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@gluestack-ui/form-control': 0.1.18(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0)
+      '@gluestack-ui/utils': 0.1.13(react-dom@18.3.1)(react-native@0.74.5)(react@18.2.0)
+      '@react-native-aria/focus': 0.2.9(react-native@0.74.5)(react@18.2.0)
+      '@react-native-aria/interactions': 0.2.13(react-native@0.74.5)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.3.1(react@18.2.0)
+    transitivePeerDependencies:
+      - react-native
     dev: false
 
   /@gluestack-ui/nativewind-utils@1.0.23(nativewind@4.0.36)(react@18.2.0)(tailwindcss@3.4.14):
@@ -6387,6 +6451,18 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+    dev: false
+
+  /lucide-react-native@0.454.0(react-native-svg@13.4.0)(react-native@0.74.5)(react@18.2.0):
+    resolution: {integrity: sha512-nkIENGAUpRH4aFcGSNGhMQYXKScizRxYEBhXfpvDY7P0mvF548OlLep2P8F1Qs4unC29WNApaHWJ2gx9KGwcPA==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+      react-native-svg: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
+    dependencies:
+      react: 18.2.0
+      react-native: 0.74.5(@babel/core@7.20.2)(@babel/preset-env@7.26.0)(@types/react@18.2.45)(react@18.2.0)
+      react-native-svg: 13.4.0(react-native@0.74.5)(react@18.2.0)
     dev: false
 
   /make-dir@2.1.0:
