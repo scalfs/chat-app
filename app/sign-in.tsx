@@ -2,7 +2,6 @@ import { Button, ButtonText } from "@/components/ui/button";
 import {
   FormControl,
   FormControlError,
-  FormControlErrorIcon,
   FormControlErrorText,
   FormControlLabel,
   FormControlLabelText,
@@ -11,21 +10,20 @@ import { Heading } from "@/components/ui/heading";
 import { Input, InputField } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { AlertTriangle } from "lucide-react-native";
 
-const Page = () => {
+export default function Page() {
   return (
-    <VStack className="max-w-[440px] w-full" space="md">
-      <VStack className="md:items-center" space="md">
-        <Heading className="md:text-center" size="3xl">
-          Log in
-        </Heading>
-        <Text>Login to start using TrashLab Chat App</Text>
+    <VStack
+      space="xl"
+      className="max-w-md w-full h-full p-4 justify-center sm:self-center"
+    >
+      <VStack className="sm:items-center" space="md">
+        <Heading size="3xl">Welcome!</Heading>
+        <Text>Enter your username to start using TrashLab Chat App</Text>
       </VStack>
       <VStack className="w-full">
         <VStack space="xl" className="w-full">
           <FormControl
-            isInvalid
             // isInvalid={!!errors?.email || !validated.emailValid}
             className="w-full"
           >
@@ -35,7 +33,7 @@ const Page = () => {
 
             <Input>
               <InputField
-                placeholder="Enter email"
+                placeholder="Enter username"
                 // value={value}
                 // onChangeText={onChange}
                 // onBlur={onBlur}
@@ -43,14 +41,6 @@ const Page = () => {
                 returnKeyType="done"
               />
             </Input>
-            <FormControlError>
-              <FormControlErrorIcon as={AlertTriangle} />
-              <FormControlErrorText>
-                {/* {errors?.email?.message ||
-                  (!validated.emailValid && "Email ID not found")} */}
-                Username already exists
-              </FormControlErrorText>
-            </FormControlError>
           </FormControl>
         </VStack>
         <VStack className="w-full my-7 " space="lg">
@@ -60,12 +50,10 @@ const Page = () => {
               // handleSubmit(onSubmit)
             }}
           >
-            <ButtonText className="font-medium">Log in</ButtonText>
+            <ButtonText className="font-medium">Sign In</ButtonText>
           </Button>
         </VStack>
       </VStack>
     </VStack>
   );
-};
-
-export default Page;
+}
