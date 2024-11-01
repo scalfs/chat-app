@@ -1,4 +1,3 @@
-import { CreateChatRoomUseCaseImpl } from "@/application/use-cases/create-chat-room";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
@@ -11,41 +10,25 @@ import {
   ModalContent,
   ModalHeader,
 } from "@/components/ui/modal";
+import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
+import { ChatDetails } from "@/domain/entities";
 import {
   UsernameForm,
   UsernameFormData,
 } from "@/presentation/components/username-form";
+import {
+  useCreateChatRoom,
+  useGetChatRooms,
+} from "@/presentation/hooks/useChatRooms";
 import { useCustomToast } from "@/presentation/hooks/useCustomToast";
 import { useAuth } from "@/presentation/providers/auth-provider";
-import { useDependencies } from "@/presentation/providers/dependency-provider";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { Link, router, useNavigation } from "expo-router";
 import { LogOut, MessageCircle } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const MOCKED_CHATS = [
-  {
-    id: 1,
-    name: "John Doe",
-    lastMessage: "Hey, how are you?",
-    timestamp: "2m ago",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    lastMessage: "Can we meet tomorrow?",
-    timestamp: "1h ago",
-  },
-  {
-    id: 3,
-    name: "Bob Johnson",
-    lastMessage: "Thanks for your help!",
-    timestamp: "2h ago",
-  },
-];
 
 export default function Page() {
   const navigation = useNavigation();
@@ -54,25 +37,24 @@ export default function Page() {
 
   const { user, signOut } = useAuth();
   const { showToast } = useCustomToast();
-  const { chatRepository, userRepository } = useDependencies();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    refetch,
+    isLoading,
+    isRefetching,
+    data: chatRooms,
+  } = useGetChatRooms();
+  const { mutateAsync: createChatRoom, isPending: isCreatingChatRoom } =
+    useCreateChatRoom();
+
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const hideModal = () => setModalIsVisible(false);
   const showModal = () => setModalIsVisible(true);
 
   const onSubmit = async ({ username }: UsernameFormData) => {
     if (!user) return;
-    setIsLoading(true);
     try {
-      const createChatRoomUseCase = new CreateChatRoomUseCaseImpl(
-        userRepository,
-        chatRepository
-      );
-      const chat = await createChatRoomUseCase.execute({
-        username,
-        currentUserId: user.id,
-      });
+      const chat = await createChatRoom({ username, currentUserId: user.id });
       hideModal();
       router.navigate({
         pathname: "/chat-rooms/[id]",
@@ -83,8 +65,6 @@ export default function Page() {
       const errorDescription =
         error instanceof Error ? error.message : "Failed to create chat room";
       showToast({ title: errorTitle, description: errorDescription });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -102,14 +82,12 @@ export default function Page() {
   return (
     <>
       <FlatList
-        data={MOCKED_CHATS}
+        data={chatRooms}
+        onRefresh={refetch}
+        refreshing={isRefetching}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <ChatItem {...item} />}
-        ListEmptyComponent={() => (
-          <Text className="text-center mt-4">
-            Press "New Chat" to start a conversation.
-          </Text>
-        )}
+        ListEmptyComponent={() => <EmptyChatList {...{ isLoading }} />}
         contentContainerStyle={{ paddingTop: headerHeight }}
       />
       <Button
@@ -122,18 +100,14 @@ export default function Page() {
         <ButtonText>New Chat</ButtonText>
       </Button>
       <CreateChatModal
-        {...{ modalIsVisible, hideModal, isLoading, onSubmit }}
+        isLoading={isCreatingChatRoom}
+        {...{ modalIsVisible, hideModal, onSubmit }}
       />
     </>
   );
 }
 
-function ChatItem({
-  id,
-  name,
-  timestamp,
-  lastMessage,
-}: (typeof MOCKED_CHATS)[0]) {
+function ChatItem({ id, name, timestamp, last_message }: ChatDetails) {
   return (
     <Link asChild href={{ pathname: "/chat-rooms/[id]", params: { id, name } }}>
       <Pressable className="flex flex-row items-center p-4">
@@ -145,10 +119,22 @@ function ChatItem({
             <Heading size="md">{name}</Heading>
             <Text className="text-sm">{timestamp}</Text>
           </HStack>
-          <Text className="text-md truncate">{lastMessage}</Text>
+          <Text className="text-md truncate">{last_message}</Text>
         </Box>
       </Pressable>
     </Link>
+  );
+}
+
+function EmptyChatList({ isLoading }: { isLoading: boolean }) {
+  return (
+    <Box className="items-center mt-4">
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Text>Press "New Chat" to start a conversation.</Text>
+      )}
+    </Box>
   );
 }
 
