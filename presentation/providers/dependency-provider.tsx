@@ -1,7 +1,5 @@
-import {
-  SupabaseChatRepository,
-  SupabaseUserRepository,
-} from "@/infrastructure/api/supabase/repositories";
+import { SupabaseChatRepository } from "@/infrastructure/repositories/chat";
+import { SupabaseUserRepository } from "@/infrastructure/repositories/user";
 import { createContext, PropsWithChildren, useContext } from "react";
 
 const dependencies = {

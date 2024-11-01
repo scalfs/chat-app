@@ -1,4 +1,4 @@
-import { CreateChatRoomUseCaseImpl } from "@/application/use-cases/create-chat-room-impl";
+import { CreateChatRoomUseCaseImpl } from "@/application/use-cases/create-chat-room";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";

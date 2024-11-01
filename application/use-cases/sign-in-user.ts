@@ -1,9 +1,6 @@
 import { User } from "@/domain/entities";
 import { IUserRepository } from "@/domain/repositories";
-import {
-  SignInUserInput,
-  SignInUserUseCase,
-} from "@/domain/use-cases/sign-in-user";
+import { SignInUserInput, SignInUserUseCase } from "@/domain/use-cases/user";
 
 export class SignInUserUseCaseImpl implements SignInUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}

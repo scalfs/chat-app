@@ -3,7 +3,7 @@ import { IChatRepository, IUserRepository } from "@/domain/repositories";
 import {
   CreateChatRoomInput,
   CreateChatRoomUseCase,
-} from "@/domain/use-cases/create-chat-room";
+} from "@/domain/use-cases/chat";
 
 export class CreateChatRoomUseCaseImpl implements CreateChatRoomUseCase {
   constructor(
