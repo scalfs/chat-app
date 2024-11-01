@@ -1,9 +1,13 @@
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import {
+  queryClient,
+  QueryClientProvider,
+} from "@/infrastructure/libs/tanstack-query";
 import { AuthProvider } from "@/presentation/providers/auth-provider";
-import { DarkTheme, ThemeProvider } from "@react-navigation/native";
-import { Slot, Stack } from "expo-router";
-import "../global.css";
 import { DependencyProvider } from "@/presentation/providers/dependency-provider";
+import { DarkTheme, ThemeProvider } from "@react-navigation/native";
+import { Stack } from "expo-router";
+import "../global.css";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -13,7 +17,9 @@ export default function RootLayout() {
       <ThemeProvider value={DarkTheme}>
         <AuthProvider>
           <DependencyProvider>
-            <RootLayoutNav />
+            <QueryClientProvider client={queryClient}>
+              <RootLayoutNav />
+            </QueryClientProvider>
           </DependencyProvider>
         </AuthProvider>
       </ThemeProvider>

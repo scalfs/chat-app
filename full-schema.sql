@@ -40,7 +40,14 @@ select
         join users u on u.id = cp2.user_id
         where cp2.chat_id = c.id and cp2.user_id != cp.user_id
         limit 1
-    ) as display_name
+    ) as display_name,
+    (
+        select content
+        from messages m
+        where m.chat_id = c.id
+        order by m.created_at desc
+        limit 1
+    ) as last_message
 from chats c
 join chat_participants cp on cp.chat_id = c.id;
 
