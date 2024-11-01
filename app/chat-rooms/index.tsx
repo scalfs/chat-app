@@ -12,10 +12,13 @@ import {
   ModalHeader,
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
-import { UsernameForm, UsernameFormData } from "@/components/username-form";
+import {
+  UsernameForm,
+  UsernameFormData,
+} from "@/presentation/components/username-form";
+import { useCustomToast } from "@/presentation/hooks/useCustomToast";
 import { useAuth } from "@/presentation/providers/auth-provider";
 import { useDependencies } from "@/presentation/providers/dependency-provider";
-import { useCustomToast } from "@/src/hooks/useCustomToast";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { Link, router, useNavigation } from "expo-router";
 import { LogOut, MessageCircle } from "lucide-react-native";

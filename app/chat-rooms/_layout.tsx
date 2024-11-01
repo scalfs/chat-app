@@ -1,4 +1,4 @@
-import { useProtectedRoute } from "@/src/hooks/useProtectedRoute";
+import { useProtectedRoute } from "@/presentation/hooks/useProtectedRoute";
 import { Stack } from "expo-router";
 
 export default function AppLayout() {

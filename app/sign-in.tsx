@@ -2,10 +2,13 @@ import { SignInUserUseCaseImpl } from "@/application/use-cases/sign-in-user";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { UsernameForm, UsernameFormData } from "@/components/username-form";
+import {
+  UsernameForm,
+  UsernameFormData,
+} from "@/presentation/components/username-form";
+import { useCustomToast } from "@/presentation/hooks/useCustomToast";
 import { useAuth } from "@/presentation/providers/auth-provider";
 import { useDependencies } from "@/presentation/providers/dependency-provider";
-import { useCustomToast } from "@/src/hooks/useCustomToast";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { router } from "expo-router";
 import { useState } from "react";

@@ -1,15 +1,15 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import { Box } from "./ui/box";
-import { Button, ButtonSpinner, ButtonText } from "./ui/button";
+import { Box } from "@/components/ui/box";
+import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import {
   FormControl,
   FormControlError,
   FormControlErrorText,
-} from "./ui/form-control";
-import { Input, InputField } from "./ui/input";
+} from "@/components/ui/form-control";
+import { Input, InputField } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
 const MAX_USERNAME_LENGTH = 32;
 
@@ -38,9 +38,9 @@ export const UsernameForm = ({
 }: Props) => {
   const {
     control,
+    setError,
     handleSubmit,
     formState: { errors },
-    setError,
   } = useForm<UsernameFormData>({
     resolver: zodResolver(usernameSchema),
     defaultValues: { username: "" },
@@ -71,6 +71,8 @@ export const UsernameForm = ({
                 autoFocus={autoFocus}
                 editable={!isLoading}
                 autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="off"
                 onChangeText={onChange}
                 placeholder="Enter username"
                 onSubmitEditing={handleSubmit(onSubmitHandler)}
