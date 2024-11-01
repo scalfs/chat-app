@@ -1,4 +1,4 @@
-import { Chat, User } from "../entities/types";
+import { Chat, User } from "../entities";
 
 export interface CreateChatRoomInput {
   username: string;

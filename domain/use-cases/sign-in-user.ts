@@ -1,4 +1,4 @@
-import { User } from "../entities/types";
+import { User } from "../entities";
 
 export interface SignInUserInput {
   username: string;

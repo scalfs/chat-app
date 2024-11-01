@@ -1,5 +1,5 @@
-import { User } from "@/domain/entities/types";
-import { IUserRepository } from "@/domain/repositories/interfaces";
+import { User } from "@/domain/entities";
+import { IUserRepository } from "@/domain/repositories";
 import {
   SignInUserInput,
   SignInUserUseCase,

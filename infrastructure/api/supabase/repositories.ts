@@ -1,8 +1,5 @@
-import { Chat, User } from "@/domain/entities/types";
-import {
-  IChatRepository,
-  IUserRepository,
-} from "@/domain/repositories/interfaces";
+import { Chat, User } from "@/domain/entities";
+import { IChatRepository, IUserRepository } from "@/domain/repositories";
 import { supabase } from "./client";
 
 export class SupabaseUserRepository implements IUserRepository {

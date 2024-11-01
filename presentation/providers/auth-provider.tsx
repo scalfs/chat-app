@@ -1,4 +1,4 @@
-import { User } from "@/domain/entities/types";
+import { User } from "@/domain/entities";
 import {
   createContext,
   PropsWithChildren,

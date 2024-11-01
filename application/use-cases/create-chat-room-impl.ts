@@ -1,8 +1,5 @@
-import { Chat } from "@/domain/entities/types";
-import {
-  IChatRepository,
-  IUserRepository,
-} from "@/domain/repositories/interfaces";
+import { Chat } from "@/domain/entities";
+import { IChatRepository, IUserRepository } from "@/domain/repositories";
 import {
   CreateChatRoomInput,
   CreateChatRoomUseCase,

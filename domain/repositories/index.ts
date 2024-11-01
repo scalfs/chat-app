@@ -1,4 +1,4 @@
-import { Chat, User } from "../entities/types";
+import { Chat, User } from "../entities";
 
 export interface IUserRepository {
   findByUsername(username: string): Promise<User | null>;
