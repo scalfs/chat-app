@@ -1,5 +1,8 @@
-import { User } from "@/domain/entities/types";
-import { IUserRepository } from "@/domain/repositories/interfaces";
+import { Chat, User } from "@/domain/entities/types";
+import {
+  IChatRepository,
+  IUserRepository,
+} from "@/domain/repositories/interfaces";
 import { supabase } from "./client";
 
 export class SupabaseUserRepository implements IUserRepository {
@@ -23,5 +26,34 @@ export class SupabaseUserRepository implements IUserRepository {
 
     if (error || !data) throw new Error("Failed to create user.");
     return data;
+  }
+}
+
+export class SupabaseChatRepository implements IChatRepository {
+  async createChat(): Promise<Chat> {
+    const { data, error } = await supabase
+      .from("chats")
+      .insert({})
+      .select()
+      .single();
+
+    if (error || !data) {
+      console.error(error); // TODO: add a logger service, like sentry
+      throw new Error("Failed to create chat.");
+    }
+    return data;
+  }
+
+  async addParticipants(chatId: number, userIds: number[]): Promise<void> {
+    const participants = userIds.map((userId) => ({
+      chat_id: chatId,
+      user_id: userId,
+    }));
+
+    const { error } = await supabase
+      .from("chat_participants")
+      .insert(participants);
+
+    if (error) throw new Error("Failed to add participants.");
   }
 }

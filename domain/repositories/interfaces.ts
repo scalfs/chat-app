@@ -1,6 +1,11 @@
-import { User } from "../entities/types";
+import { Chat, User } from "../entities/types";
 
 export interface IUserRepository {
   findByUsername(username: string): Promise<User | null>;
   createUser(username: string): Promise<User>;
+}
+
+export interface IChatRepository {
+  createChat(): Promise<Chat>;
+  addParticipants(chatId: number, userIds: number[]): Promise<void>;
 }
