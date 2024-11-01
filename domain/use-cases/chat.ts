@@ -1,4 +1,4 @@
-import { Chat } from "../entities";
+import { Chat, ChatDetails } from "../entities";
 
 export interface CreateChatRoomInput {
   username: string;
@@ -7,4 +7,12 @@ export interface CreateChatRoomInput {
 
 export interface CreateChatRoomUseCase {
   execute(input: CreateChatRoomInput): Promise<Chat>;
+}
+
+export interface GetChatRoomsInput {
+  userId: number;
+}
+
+export interface GetChatRoomsUseCase {
+  execute(input: GetChatRoomsInput): Promise<ChatDetails[]>;
 }

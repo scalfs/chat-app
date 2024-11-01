@@ -52,6 +52,13 @@ export type Database = {
             foreignKeyName: "chat_participants_chat_id_fkey";
             columns: ["chat_id"];
             isOneToOne: false;
+            referencedRelation: "chat_details";
+            referencedColumns: ["chat_id"];
+          },
+          {
+            foreignKeyName: "chat_participants_chat_id_fkey";
+            columns: ["chat_id"];
+            isOneToOne: false;
             referencedRelation: "chats";
             referencedColumns: ["id"];
           },
@@ -109,6 +116,13 @@ export type Database = {
             foreignKeyName: "messages_chat_id_fkey";
             columns: ["chat_id"];
             isOneToOne: false;
+            referencedRelation: "chat_details";
+            referencedColumns: ["chat_id"];
+          },
+          {
+            foreignKeyName: "messages_chat_id_fkey";
+            columns: ["chat_id"];
+            isOneToOne: false;
             referencedRelation: "chats";
             referencedColumns: ["id"];
           },
@@ -141,7 +155,24 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      chat_details: {
+        Row: {
+          chat_id: number | null;
+          created_at: string | null;
+          display_name: string | null;
+          last_message: string | null;
+          viewer_id: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "chat_participants_user_id_fkey";
+            columns: ["viewer_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Functions: {
       [_ in never]: never;

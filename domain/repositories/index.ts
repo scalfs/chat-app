@@ -1,4 +1,4 @@
-import { Chat, User } from "../entities";
+import { Chat, ChatDetails, User } from "../entities";
 
 export interface IUserRepository {
   findByUsername(username: string): Promise<User | null>;
@@ -8,4 +8,5 @@ export interface IUserRepository {
 export interface IChatRepository {
   createChat(): Promise<Chat>;
   addParticipants(chatId: number, userIds: number[]): Promise<void>;
+  getChatRooms(userId: number): Promise<ChatDetails[]>;
 }
