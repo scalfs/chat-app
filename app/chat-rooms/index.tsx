@@ -51,15 +51,15 @@ export default function Page() {
   const hideModal = () => setModalIsVisible(false);
   const showModal = () => setModalIsVisible(true);
 
+  const navigateToChatRoom = (params: { id: number; name: string }) =>
+    router.navigate({ pathname: "/chat-rooms/[id]", params });
+
   const onSubmit = async ({ username }: UsernameFormData) => {
     if (!user) return;
     try {
       const chat = await createChatRoom({ username, currentUserId: user.id });
       hideModal();
-      router.navigate({
-        pathname: "/chat-rooms/[id]",
-        params: { id: chat.id, name: username },
-      });
+      navigateToChatRoom({ id: chat.id, name: username });
     } catch (error) {
       const errorTitle = "Create chat error";
       const errorDescription =
