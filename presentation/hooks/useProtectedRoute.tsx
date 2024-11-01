@@ -9,6 +9,7 @@ export const useProtectedRoute = () => {
 
   const [isNavigationReady, setNavigationReady] = useState(false);
 
+  // This effect is needed to ensure that the navigation is ready before using router actions
   useEffect(() => {
     const unsubscribe = navigation?.addListener("state", () =>
       setNavigationReady(true)
