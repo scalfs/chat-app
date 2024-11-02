@@ -17,6 +17,7 @@ import {
   UsernameForm,
   UsernameFormData,
 } from "@/presentation/components/username-form";
+import { useSignOut } from "@/presentation/hooks/useAuthActions";
 import {
   useCreateChatRoom,
   useGetChatRooms,
@@ -35,7 +36,8 @@ export default function Page() {
   const headerHeight = useHeaderHeight();
   const { bottom } = useSafeAreaInsets();
 
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
+  const signOut = useSignOut();
   const { showToast } = useCustomToast();
 
   const {

@@ -11,20 +11,20 @@ import {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  signOut: () => void;
-  signIn: (user: User) => void;
+  clearUser: () => void;
+  storeUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null);
-  const signIn = useCallback((user: User) => setUser(user), [setUser]);
-  const signOut = useCallback(() => setUser(null), [setUser]);
+  const storeUser = useCallback((user: User) => setUser(user), [setUser]);
+  const clearUser = useCallback(() => setUser(null), [setUser]);
 
   const value = useMemo(
-    () => ({ user, signIn, signOut, isAuthenticated: user !== null }),
-    [user?.id, signIn, signOut]
+    () => ({ user, storeUser, clearUser, isAuthenticated: user !== null }),
+    [user?.id, storeUser, clearUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
