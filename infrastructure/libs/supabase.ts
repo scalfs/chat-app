@@ -1,5 +1,5 @@
-import { Database } from "@/domain/entities/supabase";
 import { createClient } from "@supabase/supabase-js";
+import { Database } from "./supabase.types";
 
 export const supabase = createClient<Database>(
   process.env.EXPO_PUBLIC_SUPABASE_URL!,
