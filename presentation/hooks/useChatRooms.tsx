@@ -1,11 +1,7 @@
 import { CreateChatRoomUseCaseImpl } from "@/application/use-cases/create-chat-room";
 import { CreateChatRoomInput } from "@/domain/use-cases/chat";
 import { queryClient } from "@/infrastructure/libs/tanstack-query";
-import {
-  InvalidateOptions,
-  useMutation,
-  useQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { useAuth } from "../providers/auth-provider";
 import { useDependencies } from "../providers/dependency-provider";
