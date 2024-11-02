@@ -51,10 +51,10 @@ export class SupabaseChatRepository implements IChatRepository {
     }
 
     return chatRooms.map((room) => ({
-      id: room.chat_id || Math.random(),
-      name: room.display_name || "",
-      last_message: room.last_message || "",
-      timestamp: formatDistanceToNow(new Date(room.created_at || ""), {
+      id: room.chat_id!,
+      name: room.display_name!,
+      last_message: room.last_message!,
+      timestamp: formatDistanceToNow(new Date(room.created_at!), {
         addSuffix: true,
       }),
     }));

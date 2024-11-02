@@ -1,30 +1,45 @@
 import { CreateChatRoomUseCaseImpl } from "@/application/use-cases/create-chat-room";
 import { CreateChatRoomInput } from "@/domain/use-cases/chat";
-import { queryClient } from "@/infrastructure/libs/tanstack-query";
-import {
-  InvalidateOptions,
-  useMutation,
-  useQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { useAuth } from "../providers/auth-provider";
 import { useDependencies } from "../providers/dependency-provider";
 
-const GET_CHAT_ROOMS_QUERY_KEY = "chat-rooms";
+const getChatRoomsQueryKey = (id: number) => ["chat-rooms", id];
 
 export function useGetChatRooms() {
   const { user } = useAuth();
   const { chatRepository } = useDependencies();
 
-  return useQuery({
-    queryKey: [GET_CHAT_ROOMS_QUERY_KEY, user?.id],
-    queryFn: () => chatRepository.getChatRooms(user?.id || 0),
+  const getChatRooms = useCallback(() => {
+    if (!user?.id) throw new Error("User ID is required");
+    return chatRepository.getChatRooms(user.id);
+  }, [chatRepository, user?.id]);
+
+  const query = useQuery({
+    staleTime: 15 * 1000,
+    queryFn: getChatRooms,
+    refetchOnMount: false,
+    queryKey: getChatRoomsQueryKey(user?.id!),
   });
+
+  // Refetch chat rooms when the screen is focused
+  // This makes sure we're fetching when coming back from the chat room screen
+  useFocusEffect(
+    useCallback(() => {
+      query.refetch();
+    }, [])
+  );
+
+  return query;
 }
 
 export function useCreateChatRoom() {
   const { user } = useAuth();
   const { chatRepository, userRepository } = useDependencies();
+
+  const queryClient = useQueryClient();
 
   const createChatRoom = useCallback(async (input: CreateChatRoomInput) => {
     const createChatRoomUseCase = new CreateChatRoomUseCaseImpl(
@@ -37,10 +52,10 @@ export function useCreateChatRoom() {
 
   return useMutation({
     mutationFn: createChatRoom,
-    mutationKey: ["create-chat-room"],
-    onSuccess: () => clearChatRoomsCache(user?.id), // Invalidate and refetch chat rooms after creating a new one
+    // Invalidate and refetch chat rooms after creating a new one
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: getChatRoomsQueryKey(user?.id!),
+      }),
   });
 }
-
-export const clearChatRoomsCache = (id?: number) =>
-  queryClient.invalidateQueries({ queryKey: [GET_CHAT_ROOMS_QUERY_KEY, id] });
