@@ -1,6 +1,6 @@
+import { GetMessagesUseCaseImpl } from "@/application/use-cases/get-messages";
 import { ChatMessage } from "@/domain/entities";
 import { IMessageRepository } from "@/domain/repositories";
-import { GetMessagesUseCaseImpl } from "../get-messages";
 
 describe("GetMessagesUseCaseImpl", () => {
   let mockMessageRepository: jest.Mocked<IMessageRepository>;
@@ -24,7 +24,10 @@ describe("GetMessagesUseCaseImpl", () => {
   ];
 
   beforeEach(() => {
-    mockMessageRepository = { getMessages: jest.fn() };
+    mockMessageRepository = {
+      getMessages: jest.fn(),
+      createMessage: jest.fn(),
+    };
     getMessagesUseCase = new GetMessagesUseCaseImpl(mockMessageRepository);
   });
 
