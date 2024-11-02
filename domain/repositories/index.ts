@@ -1,4 +1,4 @@
-import { Chat, ChatDetails, User } from "../entities";
+import { Chat, ChatDetails, ChatMessage, User } from "../entities";
 
 export interface IUserRepository {
   findByUsername(username: string): Promise<User | null>;
@@ -10,3 +10,13 @@ export interface IChatRepository {
   addParticipants(chatId: number, userIds: number[]): Promise<void>;
   getChatRooms(userId: number): Promise<ChatDetails[]>;
 }
+
+export interface IMessageRepository {
+  getMessages(params: GetMessagesParams): Promise<ChatMessage[]>;
+}
+
+export type GetMessagesParams = {
+  chatId: number;
+  offset: number;
+  limit: number;
+};
