@@ -1,6 +1,6 @@
-import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
+import { Heading } from "@/presentation/components/ui/heading";
+import { Text } from "@/presentation/components/ui/text";
+import { VStack } from "@/presentation/components/ui/vstack";
 import {
   UsernameForm,
   UsernameFormData,

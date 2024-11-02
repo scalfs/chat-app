@@ -1,4 +1,4 @@
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { GluestackUIProvider } from "@/presentation/components/ui/gluestack-ui-provider";
 import {
   queryClient,
   QueryClientProvider,
@@ -7,22 +7,19 @@ import { AuthProvider } from "@/presentation/providers/auth-provider";
 import { DependencyProvider } from "@/presentation/providers/dependency-provider";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { PropsWithChildren } from "react";
-import "../global.css";
 
 export { ErrorBoundary } from "expo-router";
 
 export function RootLayout({ children: RootNav }: PropsWithChildren) {
   return (
-    <GluestackUIProvider mode="dark">
-      <ThemeProvider value={DarkTheme}>
-        <AuthProvider>
-          <DependencyProvider>
-            <QueryClientProvider client={queryClient}>
-              {RootNav}
-            </QueryClientProvider>
-          </DependencyProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </GluestackUIProvider>
+    <ThemeProvider value={DarkTheme}>
+      <AuthProvider>
+        <DependencyProvider>
+          <QueryClientProvider client={queryClient}>
+            {RootNav}
+          </QueryClientProvider>
+        </DependencyProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

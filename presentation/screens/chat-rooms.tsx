@@ -1,17 +1,24 @@
-import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
-import { Box } from "@/components/ui/box";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
-import { HStack } from "@/components/ui/hstack";
+import {
+  Avatar,
+  AvatarFallbackText,
+} from "@/presentation/components/ui/avatar";
+import { Box } from "@/presentation/components/ui/box";
+import {
+  Button,
+  ButtonIcon,
+  ButtonText,
+} from "@/presentation/components/ui/button";
+import { Heading } from "@/presentation/components/ui/heading";
+import { HStack } from "@/presentation/components/ui/hstack";
 import {
   Modal,
   ModalBackdrop,
   ModalBody,
   ModalContent,
   ModalHeader,
-} from "@/components/ui/modal";
-import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/text";
+} from "@/presentation/components/ui/modal";
+import { Spinner } from "@/presentation/components/ui/spinner";
+import { Text } from "@/presentation/components/ui/text";
 import { ChatDetails } from "@/domain/entities";
 import {
   UsernameForm,

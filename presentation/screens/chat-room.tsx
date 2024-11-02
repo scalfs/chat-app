@@ -1,9 +1,12 @@
-import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
-import { Box } from "@/components/ui/box";
-import { Button, ButtonIcon } from "@/components/ui/button";
-import { HStack } from "@/components/ui/hstack";
-import { Input, InputField } from "@/components/ui/input";
-import { Text } from "@/components/ui/text";
+import {
+  Avatar,
+  AvatarFallbackText,
+} from "@/presentation/components/ui/avatar";
+import { Box } from "@/presentation/components/ui/box";
+import { Button, ButtonIcon } from "@/presentation/components/ui/button";
+import { HStack } from "@/presentation/components/ui/hstack";
+import { Input, InputField } from "@/presentation/components/ui/input";
+import { Text } from "@/presentation/components/ui/text";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Send } from "lucide-react-native";
