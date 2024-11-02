@@ -13,10 +13,17 @@ export interface IChatRepository {
 
 export interface IMessageRepository {
   getMessages(params: GetMessagesParams): Promise<ChatMessage[]>;
+  createMessage(params: CreateMessageParams): Promise<ChatMessage>;
 }
 
 export type GetMessagesParams = {
   chatId: number;
   offset: number;
   limit: number;
+};
+
+export type CreateMessageParams = {
+  chatId: number;
+  userId: number;
+  content: string;
 };

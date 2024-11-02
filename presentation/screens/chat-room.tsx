@@ -1,32 +1,38 @@
 import { ChatMessage } from "@/domain/entities";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { format, parseISO } from "date-fns";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { Send } from "lucide-react-native";
 import { useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { MessageForm } from "../components/message-form";
 import { Avatar, AvatarFallbackText } from "../components/ui/avatar";
 import { Box } from "../components/ui/box";
-import { Button, ButtonIcon } from "../components/ui/button";
-import { HStack } from "../components/ui/hstack";
-import { Input, InputField } from "../components/ui/input";
 import { Spinner } from "../components/ui/spinner";
 import { Text } from "../components/ui/text";
-import { useGetMessages } from "../hooks/useMessages";
+import { useHeaderHeight } from "../hooks/useHeaderHeight";
+import { useCreateMessage, useGetMessages } from "../hooks/useMessages";
+import useRefreshing from "../hooks/useRefreshing";
+import { useAuth } from "../providers/auth-provider";
 
 export function ChatRoomScreen() {
+  const { user } = useAuth();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const { bottom } = useSafeAreaInsets();
+
   const { name, id } = useLocalSearchParams();
+  const chatId = Number(id);
 
   const {
     isLoading,
     isPending,
     refetch,
-    isRefetching,
     data: messages,
-  } = useGetMessages(Number(id));
+  } = useGetMessages(chatId);
+  const { isRefreshing, refresh } = useRefreshing(refetch);
+  const { mutate: createMessage, isPending: isCreatingMessage } =
+    useCreateMessage(chatId);
 
   useEffect(() => {
     navigation.setOptions({
@@ -39,60 +45,60 @@ export function ChatRoomScreen() {
     });
   }, []);
 
-  const handleSend = () => {};
+  const handleSendMessage = (content: string) => createMessage(content);
 
   return (
     <>
       <FlatList
         data={messages}
-        onRefresh={refetch}
-        refreshing={isRefetching}
-        className="flex-1 p-4"
+        onRefresh={refresh}
+        refreshing={isRefreshing}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <Message {...item} />}
-        ListEmptyComponent={isPending ? LoadingMessage : null}
-        ListFooterComponent={isLoading ? LoadingMessage : null}
-        contentContainerStyle={{ paddingTop: headerHeight, gap: 16 }}
+        renderItem={({ item }) => (
+          <Message {...item} currentUserId={user?.id!} />
+        )}
+        contentContainerClassName="gap-4 px-4 pb-8"
+        contentContainerStyle={{ paddingTop: headerHeight + 16 }}
+        ListEmptyComponent={isPending ? Loading : null}
+        ListFooterComponent={isLoading && isCreatingMessage ? Loading : null}
       />
       <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
-        <HStack
-          style={{ paddingBottom: bottom || 16 }}
-          className="p-4 border-t border-primary-0 w-full items-center gap-2"
-        >
-          <Input className="flex-1">
-            <InputField
-              placeholder="Type a message"
-              value={""}
-              // onChange={(e) => setNewMessage(e.target.value)}
-            />
-          </Input>
-          <Button onPress={handleSend}>
-            <ButtonIcon as={Send} className="h-6 w-6" />
-          </Button>
-        </HStack>
+        <Box style={{ paddingBottom: bottom || 16 }}>
+          <MessageForm
+            onSubmit={handleSendMessage}
+            isLoading={isCreatingMessage}
+          />
+        </Box>
       </KeyboardAvoidingView>
     </>
   );
 }
 
-function Message(message: ChatMessage, userId: number) {
-  const isSent = message.user_id === userId;
+function Message({
+  currentUserId,
+  ...message
+}: ChatMessage & { currentUserId: number }) {
+  const isSent = message.user_id === currentUserId;
   const alignment = isSent ? "items-end" : "items-start";
   const bgColor = isSent ? "bg-primary-500" : "bg-background-50";
   const textColor = isSent ? "text-typography-0" : "text-typography-700";
+
+  const formatTime = (dateString: string) => {
+    return format(parseISO(dateString), "hh:mm a");
+  };
 
   return (
     <Box className={`flex ${alignment}`}>
       <Box className={`max-w-[70%] rounded-lg p-3 ${bgColor}`}>
         <Text className={textColor}>{message.content}</Text>
         <Text size="sm" className={`${textColor}/50 mt-1`}>
-          {message.created_at}
+          {formatTime(message.created_at)}
         </Text>
       </Box>
     </Box>
   );
 }
 
-function LoadingMessage() {
+function Loading() {
   return <Spinner className="mt-4" />;
 }
