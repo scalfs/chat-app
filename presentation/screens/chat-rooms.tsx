@@ -1,42 +1,30 @@
-import {
-  Avatar,
-  AvatarFallbackText,
-} from "@/presentation/components/ui/avatar";
-import { Box } from "@/presentation/components/ui/box";
-import {
-  Button,
-  ButtonIcon,
-  ButtonText,
-} from "@/presentation/components/ui/button";
-import { Heading } from "@/presentation/components/ui/heading";
-import { HStack } from "@/presentation/components/ui/hstack";
+import { ChatDetails } from "@/domain/entities";
+import { Link, router, useNavigation } from "expo-router";
+import { LogOut, MessageCircle } from "lucide-react-native";
+import { useEffect, useState } from "react";
+import { FlatList, Pressable } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { Avatar, AvatarFallbackText } from "../components/ui/avatar";
+import { Box } from "../components/ui/box";
+import { Button, ButtonIcon, ButtonText } from "../components/ui/button";
+import { Heading } from "../components/ui/heading";
+import { HStack } from "../components/ui/hstack";
 import {
   Modal,
   ModalBackdrop,
   ModalBody,
   ModalContent,
   ModalHeader,
-} from "@/presentation/components/ui/modal";
-import { Spinner } from "@/presentation/components/ui/spinner";
-import { Text } from "@/presentation/components/ui/text";
-import { ChatDetails } from "@/domain/entities";
-import {
-  UsernameForm,
-  UsernameFormData,
-} from "@/presentation/components/username-form";
-import { useSignOut } from "@/presentation/hooks/useAuthActions";
-import {
-  useCreateChatRoom,
-  useGetChatRooms,
-} from "@/presentation/hooks/useChatRooms";
-import { useCustomToast } from "@/presentation/hooks/useCustomToast";
-import { useAuth } from "@/presentation/providers/auth-provider";
-import { useHeaderHeight } from "@react-navigation/elements";
-import { Link, router, useNavigation } from "expo-router";
-import { LogOut, MessageCircle } from "lucide-react-native";
-import { useEffect, useState } from "react";
-import { FlatList, Pressable } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+} from "../components/ui/modal";
+import { Spinner } from "../components/ui/spinner";
+import { Text } from "../components/ui/text";
+import { UsernameForm, UsernameFormData } from "../components/username-form";
+import { useSignOut } from "../hooks/useAuthActions";
+import { useCreateChatRoom, useGetChatRooms } from "../hooks/useChatRooms";
+import { useCustomToast } from "../hooks/useCustomToast";
+import { useHeaderHeight } from "../hooks/useHeaderHeight";
+import { useAuth } from "../providers/auth-provider";
 
 export function ChatRoomsScreen() {
   const navigation = useNavigation();

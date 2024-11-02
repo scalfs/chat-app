@@ -1,19 +1,16 @@
-import { Box } from "@/presentation/components/ui/box";
-import {
-  Button,
-  ButtonSpinner,
-  ButtonText,
-} from "@/presentation/components/ui/button";
-import {
-  FormControl,
-  FormControlError,
-  FormControlErrorText,
-} from "@/presentation/components/ui/form-control";
-import { Input, InputField } from "@/presentation/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { Box } from "../components/ui/box";
+import { Button, ButtonSpinner, ButtonText } from "../components/ui/button";
+import {
+  FormControl,
+  FormControlError,
+  FormControlErrorText,
+} from "../components/ui/form-control";
+import { Input, InputField } from "../components/ui/input";
 
 const MAX_USERNAME_LENGTH = 32;
 

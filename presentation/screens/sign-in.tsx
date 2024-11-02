@@ -1,15 +1,12 @@
-import { Heading } from "@/presentation/components/ui/heading";
-import { Text } from "@/presentation/components/ui/text";
-import { VStack } from "@/presentation/components/ui/vstack";
-import {
-  UsernameForm,
-  UsernameFormData,
-} from "@/presentation/components/username-form";
-import { useSignIn } from "@/presentation/hooks/useAuthActions";
-import { useCustomToast } from "@/presentation/hooks/useCustomToast";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { router } from "expo-router";
 import { KeyboardAvoidingView, Platform } from "react-native";
+import { Heading } from "../components/ui/heading";
+import { Text } from "../components/ui/text";
+import { VStack } from "../components/ui/vstack";
+import { UsernameForm, UsernameFormData } from "../components/username-form";
+import { useSignIn } from "../hooks/useAuthActions";
+import { useCustomToast } from "../hooks/useCustomToast";
+import { useHeaderHeight } from "../hooks/useHeaderHeight";
 
 export function SingInScreen() {
   const headerHeight = useHeaderHeight();
