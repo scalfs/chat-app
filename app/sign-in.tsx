@@ -1,59 +1,52 @@
-import { Button, ButtonText } from "@/components/ui/button";
-import {
-  FormControl,
-  FormControlError,
-  FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
-} from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
-import { Input, InputField } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import {
+  UsernameForm,
+  UsernameFormData,
+} from "@/presentation/components/username-form";
+import { useSignIn } from "@/presentation/hooks/useAuthActions";
+import { useCustomToast } from "@/presentation/hooks/useCustomToast";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { router } from "expo-router";
+import { KeyboardAvoidingView, Platform } from "react-native";
 
 export default function Page() {
-  return (
-    <VStack
-      space="xl"
-      className="max-w-md w-full h-full p-4 justify-center sm:self-center"
-    >
-      <VStack className="sm:items-center" space="md">
-        <Heading size="3xl">Welcome!</Heading>
-        <Text>Enter your username to start using TrashLab Chat App</Text>
-      </VStack>
-      <VStack className="w-full">
-        <VStack space="xl" className="w-full">
-          <FormControl
-            // isInvalid={!!errors?.email || !validated.emailValid}
-            className="w-full"
-          >
-            <FormControlLabel>
-              <FormControlLabelText>Username</FormControlLabelText>
-            </FormControlLabel>
+  const headerHeight = useHeaderHeight();
+  const { showToast } = useCustomToast();
+  const { mutateAsync: signIn, isPending } = useSignIn();
 
-            <Input>
-              <InputField
-                placeholder="Enter username"
-                // value={value}
-                // onChangeText={onChange}
-                // onBlur={onBlur}
-                // onSubmitEditing={handleKeyPress}
-                returnKeyType="done"
-              />
-            </Input>
-          </FormControl>
+  const navigateToInitialPage = () => router.replace("/");
+
+  const onSubmit = async ({ username }: UsernameFormData) => {
+    try {
+      await signIn(username);
+      navigateToInitialPage();
+    } catch (error) {
+      const errorTitle = "Error signing in.";
+      const errorDescription =
+        error instanceof Error ? error.message : "Please try again later.";
+      showToast({ title: errorTitle, description: errorDescription });
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })}>
+      <VStack
+        space="xl"
+        style={{ paddingBottom: headerHeight }} // To ensure center alignment
+        className="max-w-md w-full h-full p-4 justify-center sm:self-center"
+      >
+        <VStack className="sm:items-center" space="md">
+          <Heading size="3xl">Welcome!</Heading>
+          <Text>Enter your username to start using TrashLab Chat App</Text>
         </VStack>
-        <VStack className="w-full my-7 " space="lg">
-          <Button
-            className="w-full"
-            onPress={() => {
-              // handleSubmit(onSubmit)
-            }}
-          >
-            <ButtonText className="font-medium">Sign In</ButtonText>
-          </Button>
-        </VStack>
+        <UsernameForm
+          {...{ onSubmit }}
+          isLoading={isPending}
+          buttonLabel={isPending ? "Signing in..." : "Sign in"}
+        />
       </VStack>
-    </VStack>
+    </KeyboardAvoidingView>
   );
 }

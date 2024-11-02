@@ -28,6 +28,29 @@ create table messages (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- Create a view for chat details with participant names
+create or replace view chat_details as
+select 
+    c.id as chat_id,
+    c.created_at,
+    cp.user_id as viewer_id,
+    (
+        select u.username 
+        from chat_participants cp2
+        join users u on u.id = cp2.user_id
+        where cp2.chat_id = c.id and cp2.user_id != cp.user_id
+        limit 1
+    ) as display_name,
+    (
+        select content
+        from messages m
+        where m.chat_id = c.id
+        order by m.created_at desc
+        limit 1
+    ) as last_message
+from chats c
+join chat_participants cp on cp.chat_id = c.id;
+
 -- Enable RLS (Row Level Security)
 alter table users enable row level security;
 alter table chats enable row level security;
@@ -42,7 +65,11 @@ create policy "Allow public user read" on users for select to public using (true
 -- Chats policies
 -- Allow users to create chats
 create policy "Allow chat creation" on chats for insert to public with check (true);
+-- Create policy to allow anyone to read users
+create policy "Allow chat read" on chats for select to public using (true);
 
 -- Chat Participants policies
 -- Allow users to add participants when creating a chat
 create policy "Allow adding participants" on chat_participants for insert to public with check (true);
+-- Create policy to allow anyone to read users
+create policy "Allow reading participants" on chat_participants for select to public using (true);
