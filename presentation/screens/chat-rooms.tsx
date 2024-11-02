@@ -24,6 +24,7 @@ import { useSignOut } from "../hooks/useAuthActions";
 import { useCreateChatRoom, useGetChatRooms } from "../hooks/useChatRooms";
 import { useCustomToast } from "../hooks/useCustomToast";
 import { useHeaderHeight } from "../hooks/useHeaderHeight";
+import useRefreshing from "../hooks/useRefreshing";
 import { useAuth } from "../providers/auth-provider";
 
 export function ChatRoomsScreen() {
@@ -35,12 +36,8 @@ export function ChatRoomsScreen() {
   const signOut = useSignOut();
   const { showToast } = useCustomToast();
 
-  const {
-    refetch,
-    isLoading,
-    isRefetching,
-    data: chatRooms,
-  } = useGetChatRooms();
+  const { refetch, isLoading, data: chatRooms } = useGetChatRooms();
+  const { isRefreshing, refresh } = useRefreshing(refetch);
   const { mutateAsync: createChatRoom, isPending: isCreatingChatRoom } =
     useCreateChatRoom();
 
@@ -80,8 +77,8 @@ export function ChatRoomsScreen() {
     <>
       <FlatList
         data={chatRooms}
-        onRefresh={refetch}
-        refreshing={isRefetching}
+        onRefresh={refresh}
+        refreshing={isRefreshing}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <ChatItem {...item} />}
         ListEmptyComponent={() => <EmptyChatList {...{ isLoading }} />}
