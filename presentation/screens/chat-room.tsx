@@ -3,6 +3,7 @@ import { format, parseISO } from "date-fns";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, Platform } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { MessageForm } from "../components/message-form";
@@ -11,6 +12,10 @@ import { Box } from "../components/ui/box";
 import { Spinner } from "../components/ui/spinner";
 import { Text } from "../components/ui/text";
 import { useHeaderHeight } from "../hooks/useHeaderHeight";
+import {
+  LIKE_REACTION,
+  useLikeMessageOptimisticUpdate,
+} from "../hooks/useLikeMessage";
 import { useCreateMessage, useGetMessages } from "../hooks/useMessages";
 import useRefreshing from "../hooks/useRefreshing";
 import { useAuth } from "../providers/auth-provider";
@@ -78,27 +83,49 @@ function Message({
   currentUserId,
   ...message
 }: ChatMessage & { currentUserId: number }) {
+  const { toggleLike, isLiked } = useLikeMessageOptimisticUpdate(
+    message,
+    currentUserId
+  );
+
   const isSent = message.user_id === currentUserId;
   const alignment = isSent ? "items-end" : "items-start";
   const bgColor = isSent ? "bg-primary-500" : "bg-background-50";
   const textColor = isSent ? "text-typography-0" : "text-typography-700";
+
+  const tap = Gesture.Tap().numberOfTaps(2).onEnd(toggleLike);
 
   const formatTime = (dateString: string) => {
     return format(parseISO(dateString), "hh:mm a");
   };
 
   return (
-    <Box className={`flex ${alignment}`}>
-      <Box className={`max-w-[70%] rounded-lg p-3 ${bgColor}`}>
-        <Text className={textColor}>{message.content}</Text>
-        <Text size="sm" className={`${textColor}/50 mt-1`}>
-          {formatTime(message.created_at)}
-        </Text>
+    <GestureDetector gesture={tap}>
+      <Box className={`flex ${alignment} relative`}>
+        <Box className={`max-w-[70%] rounded-lg p-3 ${bgColor}`}>
+          <Text className={textColor}>{message.content}</Text>
+          <Text size="sm" className={`${textColor}/50 mt-1`}>
+            {formatTime(message.created_at)}
+          </Text>
+          {isLiked && <LikeEmoji {...{ isSent, bgColor }} />}
+        </Box>
       </Box>
-    </Box>
+    </GestureDetector>
   );
 }
 
 function Loading() {
   return <Spinner className="mt-4" />;
+}
+
+function LikeEmoji({ isSent, bgColor }: { isSent: boolean; bgColor: string }) {
+  const emojiAlignment = isSent ? "left-[-10px]" : "right-[-10px]";
+
+  return (
+    <Box
+      className={`absolute ${emojiAlignment} bottom-[-10px] rounded-full ${bgColor} p-0.5`}
+    >
+      <Text aria-label="thumbs up emoji">{LIKE_REACTION.emojiUnicode}</Text>
+    </Box>
+  );
 }
