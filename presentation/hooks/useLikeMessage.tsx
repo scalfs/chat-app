@@ -8,7 +8,7 @@ import { useDependencies } from "../providers/dependency-provider";
 // TODO: map all available reactions in a config file
 // https://unicode.org/emoji/charts/full-emoji-list.html
 export const LIKE_REACTION = {
-  emojiUnicode: "\u{1F44D}",
+  emojiUnicode: "👍",
   emojiDescription: "thumbs up",
 };
 
@@ -52,28 +52,42 @@ export function useLikeMessageOptimisticUpdate(
   message: ChatMessage,
   userId: number
 ) {
-  const isLikedByCurrentUser = getIsLikedByCurrentUser(message, userId);
-  const [isLiked, setIsLiked] = useState(() => isLikedByCurrentUser);
   const { isPending, mutateAsync, isError } = useLikeMessage();
+  const {
+    isLikedByCurrentUser: initialIsLikedByCurrentUser,
+    otherUsersLikeReactionsCount,
+  } = getLikeReactions(message, userId);
+
+  const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(
+    () => initialIsLikedByCurrentUser
+  );
 
   const toggleLike = useCallback(() => {
-    if (isPending) return;
-    setIsLiked((prev) => !prev);
+    if (isPending) return; // Prevent double clicks
+    setIsLikedByCurrentUser((prev) => !prev);
     return mutateAsync({ messageId: message.id, isLikedByCurrentUser });
-  }, [isPending, mutateAsync, isLikedByCurrentUser]);
+  }, [isPending, mutateAsync, isLikedByCurrentUser, setIsLikedByCurrentUser]);
 
   useEffect(() => {
     // Rollback the optimistic update if the reaction fails to be sent to the server.
-    if (isError) setIsLiked((prev) => !prev);
+    if (isError) setIsLikedByCurrentUser((prev) => !prev);
   }, [isError]);
 
-  return { toggleLike, isLiked };
+  return { toggleLike, isLikedByCurrentUser, otherUsersLikeReactionsCount };
 }
 
-function getIsLikedByCurrentUser(message: ChatMessage, userId: number) {
-  return message.reactions.some(
+function getLikeReactions(message: ChatMessage, currentUserId: number) {
+  const isLikedByCurrentUser = message.reactions.some(
     (reaction) =>
-      reaction.user_id === userId &&
+      reaction.user_id === currentUserId &&
       reaction.emoji_unicode === LIKE_REACTION.emojiUnicode
   );
+
+  const otherUsersLikeReactionsCount = message.reactions.filter(
+    (reaction) =>
+      reaction.user_id !== currentUserId &&
+      reaction.emoji_unicode === LIKE_REACTION.emojiUnicode
+  ).length;
+
+  return { isLikedByCurrentUser, otherUsersLikeReactionsCount };
 }

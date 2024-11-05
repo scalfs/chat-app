@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MessageForm } from "../components/message-form";
 import { Avatar, AvatarFallbackText } from "../components/ui/avatar";
 import { Box } from "../components/ui/box";
+import { HStack } from "../components/ui/hstack";
 import { Spinner } from "../components/ui/spinner";
 import { Text } from "../components/ui/text";
 import { useHeaderHeight } from "../hooks/useHeaderHeight";
@@ -83,21 +84,16 @@ function Message({
   currentUserId,
   ...message
 }: ChatMessage & { currentUserId: number }) {
-  const { toggleLike, isLiked } = useLikeMessageOptimisticUpdate(
-    message,
-    currentUserId
-  );
+  const { toggleLike, isLikedByCurrentUser, otherUsersLikeReactionsCount } =
+    useLikeMessageOptimisticUpdate(message, currentUserId);
+  const tap = Gesture.Tap().numberOfTaps(2).onEnd(toggleLike);
 
   const isSent = message.user_id === currentUserId;
   const alignment = isSent ? "items-end" : "items-start";
   const bgColor = isSent ? "bg-primary-500" : "bg-background-50";
   const textColor = isSent ? "text-typography-0" : "text-typography-700";
 
-  const tap = Gesture.Tap().numberOfTaps(2).onEnd(toggleLike);
-
-  const formatTime = (dateString: string) => {
-    return format(parseISO(dateString), "hh:mm a");
-  };
+  const formatTime = (date: string) => format(parseISO(date), "hh:mm a");
 
   return (
     <GestureDetector gesture={tap}>
@@ -107,7 +103,15 @@ function Message({
           <Text size="sm" className={`${textColor}/50 mt-1`}>
             {formatTime(message.created_at)}
           </Text>
-          {isLiked && <LikeEmoji {...{ isSent, bgColor }} />}
+          <LikeEmoji
+            {...{
+              isSent,
+              bgColor,
+              textColor,
+              isLikedByCurrentUser,
+              otherUsersLikeReactionsCount,
+            }}
+          />
         </Box>
       </Box>
     </GestureDetector>
@@ -118,14 +122,40 @@ function Loading() {
   return <Spinner className="mt-4" />;
 }
 
-function LikeEmoji({ isSent, bgColor }: { isSent: boolean; bgColor: string }) {
+interface LikeEmojiProps {
+  isSent: boolean;
+  bgColor: string;
+  textColor: string;
+  isLikedByCurrentUser: boolean;
+  otherUsersLikeReactionsCount: number;
+}
+
+function LikeEmoji({
+  isSent,
+  bgColor,
+  textColor,
+  isLikedByCurrentUser,
+  otherUsersLikeReactionsCount,
+}: LikeEmojiProps) {
   const emojiAlignment = isSent ? "left-[-10px]" : "right-[-10px]";
 
+  const shouldDisplayEmoji =
+    isLikedByCurrentUser || otherUsersLikeReactionsCount > 0;
+  const shouldDisplayCount =
+    isLikedByCurrentUser && otherUsersLikeReactionsCount > 0;
+
+  if (!shouldDisplayEmoji) return null;
+
   return (
-    <Box
-      className={`absolute ${emojiAlignment} bottom-[-10px] rounded-full ${bgColor} p-0.5`}
+    <HStack
+      className={`absolute ${emojiAlignment} bottom-[-10px] rounded-full ${bgColor} p-0.5 items-center`}
     >
       <Text aria-label="thumbs up emoji">{LIKE_REACTION.emojiUnicode}</Text>
-    </Box>
+      {shouldDisplayCount && (
+        <Text size="sm" className={`${textColor}/50`}>
+          +{otherUsersLikeReactionsCount}
+        </Text>
+      )}
+    </HStack>
   );
 }
