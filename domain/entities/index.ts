@@ -19,6 +19,7 @@ export interface ChatMessage {
   user_id: number;
   content: string;
   created_at: string;
+  reactions: MessageReaction[];
 }
 
 export interface ChatDetails extends Omit<Chat, "created_at"> {
@@ -29,4 +30,11 @@ export interface ChatDetails extends Omit<Chat, "created_at"> {
 
 export interface ChatParticipantDetails extends ChatParticipant {
   username: string;
+}
+
+export interface MessageReaction {
+  user_id: number;
+  emoji_unicode: string;
+  emoji_description: string;
+  created_at: string;
 }

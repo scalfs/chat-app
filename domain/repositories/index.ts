@@ -14,6 +14,8 @@ export interface IChatRepository {
 export interface IMessageRepository {
   getMessages(params: GetMessagesParams): Promise<ChatMessage[]>;
   createMessage(params: CreateMessageParams): Promise<ChatMessage>;
+  addReaction(params: MessageReactionParams): Promise<void>;
+  removeReaction(params: MessageReactionParams): Promise<void>;
 }
 
 export type GetMessagesParams = {
@@ -27,3 +29,10 @@ export type CreateMessageParams = {
   userId: number;
   content: string;
 };
+
+export interface MessageReactionParams {
+  messageId: number;
+  userId: number;
+  emojiUnicode: string;
+  emojiDescription: string;
+}
