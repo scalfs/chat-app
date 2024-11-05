@@ -99,3 +99,14 @@ create policy "Allow reaction creation" on message_reactions
             and cp.user_id = message_reactions.user_id
         )
     );
+-- Allow chat participants to delete their own reactions
+create policy "Allow reaction deletion" on message_reactions
+    for delete to public
+    using (
+        exists (
+            select 1 from chat_participants cp
+            join messages m on m.chat_id = cp.chat_id
+            where m.id = message_reactions.message_id
+            and cp.user_id = message_reactions.user_id
+        )
+    );
