@@ -89,6 +89,45 @@ export type Database = {
         };
         Relationships: [];
       };
+      message_reactions: {
+        Row: {
+          created_at: string;
+          emoji_description: string;
+          emoji_unicode: string;
+          message_id: number;
+          user_id: number;
+        };
+        Insert: {
+          created_at?: string;
+          emoji_description: string;
+          emoji_unicode: string;
+          message_id: number;
+          user_id: number;
+        };
+        Update: {
+          created_at?: string;
+          emoji_description?: string;
+          emoji_unicode?: string;
+          message_id?: number;
+          user_id?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "message_reactions_message_id_fkey";
+            columns: ["message_id"];
+            isOneToOne: false;
+            referencedRelation: "messages";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "message_reactions_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       messages: {
         Row: {
           chat_id: number | null;
