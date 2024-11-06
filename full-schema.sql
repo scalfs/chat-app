@@ -28,6 +28,16 @@ create table messages (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- Create message_reactions table
+create table message_reactions (
+    message_id bigint references messages(id) on delete cascade,
+    user_id bigint references users(id) on delete cascade,
+    emoji_unicode text not null,
+    emoji_description text not null,
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+    primary key (message_id, user_id, emoji_unicode)
+);
+
 -- Create a view for chat details with participant names
 create or replace view chat_details as
 select 
@@ -55,6 +65,7 @@ join chat_participants cp on cp.chat_id = c.id;
 alter table users enable row level security;
 alter table chats enable row level security;
 alter table chat_participants enable row level security;
+alter table message_reactions enable row level security;
 
 -- Users policies
 -- Create policy to allow anyone to insert (create user)
@@ -73,3 +84,29 @@ create policy "Allow chat read" on chats for select to public using (true);
 create policy "Allow adding participants" on chat_participants for insert to public with check (true);
 -- Create policy to allow anyone to read users
 create policy "Allow reading participants" on chat_participants for select to public using (true);
+
+-- Message Reactions policies
+-- Allow reading reactions
+create policy "Allow reading reactions" on message_reactions for select to public using (true);
+-- Allow chat participants to add reactions
+create policy "Allow reaction creation" on message_reactions 
+    for insert to public 
+    with check (
+        exists (
+            select 1 from chat_participants cp
+            join messages m on m.chat_id = cp.chat_id
+            where m.id = message_reactions.message_id
+            and cp.user_id = message_reactions.user_id
+        )
+    );
+-- Allow chat participants to delete their own reactions
+create policy "Allow reaction deletion" on message_reactions
+    for delete to public
+    using (
+        exists (
+            select 1 from chat_participants cp
+            join messages m on m.chat_id = cp.chat_id
+            where m.id = message_reactions.message_id
+            and cp.user_id = message_reactions.user_id
+        )
+    );

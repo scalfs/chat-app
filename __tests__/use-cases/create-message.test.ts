@@ -6,7 +6,12 @@ describe("CreateMessageUseCaseImpl", () => {
   let messageRepository: jest.Mocked<IMessageRepository>;
   let createMessageUseCase: CreateMessageUseCaseImpl;
   beforeEach(() => {
-    messageRepository = { createMessage: jest.fn(), getMessages: jest.fn() };
+    messageRepository = {
+      createMessage: jest.fn(),
+      getMessages: jest.fn(),
+      addReaction: jest.fn(),
+      removeReaction: jest.fn(),
+    };
     createMessageUseCase = new CreateMessageUseCaseImpl(messageRepository);
   });
 
@@ -23,6 +28,7 @@ describe("CreateMessageUseCaseImpl", () => {
       user_id: 456,
       content: params.content,
       created_at: new Date().toISOString(),
+      reactions: [],
     };
 
     messageRepository.createMessage.mockResolvedValue(expectedMessage);

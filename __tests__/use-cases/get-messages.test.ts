@@ -13,6 +13,7 @@ describe("GetMessagesUseCaseImpl", () => {
       user_id: 1,
       content: "Hello",
       created_at: "2024-03-20T10:00:00Z",
+      reactions: [],
     },
     {
       id: 2,
@@ -20,6 +21,7 @@ describe("GetMessagesUseCaseImpl", () => {
       user_id: 2,
       content: "Hi there",
       created_at: "2024-03-20T10:01:00Z",
+      reactions: [],
     },
   ];
 
@@ -27,6 +29,8 @@ describe("GetMessagesUseCaseImpl", () => {
     mockMessageRepository = {
       getMessages: jest.fn(),
       createMessage: jest.fn(),
+      addReaction: jest.fn(),
+      removeReaction: jest.fn(),
     };
     getMessagesUseCase = new GetMessagesUseCaseImpl(mockMessageRepository);
   });
